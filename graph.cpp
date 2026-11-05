@@ -104,12 +104,21 @@ bool loadGraph(const std::string& path, Graph& g, Stats& stats)
         }
         string origin=fields[originCol];
         string dest=fields[destCol];
-        string cancelled=fields[cancelledCol];
-        string diverted=fields[divertedCol];
         string airline=fields[airlineCol];
         string flight=fields[flightCol];
 
-        if (origin.empty()||dest.empty()||cancelled=="1"||diverted=="1"){ stats.droppedRows++; continue;}
+        bool cancelled=false, diverted=false;
+        try
+        {
+            cancelled=stod(fields[cancelledCol])==1.0;
+            diverted=stod(fields[divertedCol])==1.0;
+        } catch (...)
+        {
+            stats.droppedRows++;
+            continue;
+        }
+
+        if (origin.empty()||dest.empty()||cancelled||diverted){ stats.droppedRows++; continue;}
             stats.keptRows++;
             int fromIdx=addAirport(g, origin);
             int toIdx=addAirport(g, dest);
