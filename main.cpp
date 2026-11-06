@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <string>
 #include "DFS.h"
+#include "BFS.h"
 #include "graph.h"
 using namespace std;
 
@@ -28,7 +29,7 @@ int main(int argc, char* argv[])
 
     while (true) {
         cout << "1. Find route using DFS" << endl;
-        cout << "2. Find route using BFS (not implemented)" << endl;
+        cout << "2. Find route using BFS" << endl;
         cout << "3. Exit" << endl;
         cout << "Enter your choice: ";
 
@@ -38,11 +39,6 @@ int main(int argc, char* argv[])
 
         if (choice != "1" and choice != "2") {
             cout << "Choose 1, 2, or 3" << endl;
-            continue;
-        }
-
-        if (choice == "2") {
-            cout << "BFS has not been implemented yet." << endl;
             continue;
         }
 
@@ -56,6 +52,37 @@ int main(int argc, char* argv[])
 
         int startIndex = getAirportIndex(g, origin);
         int end_Index = getAirportIndex(g, destination_code);
+        if (choice == "2") {
+            BFSResult result = findBFS(g, startIndex, end_Index);
+
+            if (!result.validQuery) {
+                cout << "One or both airport codes were not found.\n";
+                continue;
+            }
+
+            cout << "BFS: ";
+
+            if (result.found) {
+                for (int i = 0; i < static_cast<int>(result.route.size()); i++) {
+                    if (i != 0) {
+                        cout << " -> ";
+                    }
+
+                    cout << getAirportCode(g, result.route[i]);
+                }
+
+                cout << " | flights: " << result.flights_in_route;
+            } else {
+                cout << "No route | flights: N/A";
+            }
+
+            cout << " | visited: " << result.airportsVisited
+                << " | edges: " << result.edges_examined
+                << " | time: " << fixed << setprecision(3)
+                << result.timeMicroseconds << " microseconds\n";
+            continue;
+        }
+
         DFSResult result = findDFS(g, startIndex, end_Index);
 
         if (!result.validQuery) {
