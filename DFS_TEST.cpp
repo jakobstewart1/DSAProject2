@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Graph.h"
+#include "graph.h"
 #include "DFS.h"
 using namespace std;
 
@@ -25,8 +25,8 @@ int main(){
     int d = addAirport(graph, "DDD");
     int isolated = addAirport(graph, "ISO");
 
-    //A has 2 routes to D: A->B->C->D and A->D. DFS should follow the first route, even though it is longer.
-    // Add A->B first because DFS checks flights in insertion order.
+    // A has 2 routes to D: A->B->C->D and A->D. DFS should follow the first route, even though it is longer.
+    // Add A->B first because DFS checks flights in insertion order
     addEdge(graph, a, b, "TEST", "1");
     addEdge(graph, a, d, "TEST", "2");
     addEdge(graph, b, c, "TEST", "3");
@@ -35,7 +35,7 @@ int main(){
 
         DFSResult result = findDFS(graph, a, d);
 
-    //DFS should reach D thru B and C.
+    //DFS should reach D thru B and C
     //Danny make sure BFS takes A->D
     check(result.validQuery and result.found and
           result.route == vector<int>({a, b, c, d}) and result.flights_in_route == 3,
